@@ -59,6 +59,35 @@ class Board:
                     return False
         return True
 
+    def get_possible_lines(self) -> list:
+        lines = []
+
+        # Check rows
+        for row in range(self.size):
+            for col in range(self.size - self.win_sequence + 1):
+                line = [self.grid[row][col + i] for i in range(self.win_sequence)]
+                lines.append(line)
+
+        # Check columns
+        for col in range(self.size):
+            for row in range(self.size - self.win_sequence + 1):
+                line = [self.grid[row + i][col] for i in range(self.win_sequence)]
+                lines.append(line)
+
+        # Check main diagonals
+        for row in range(self.size - self.win_sequence + 1):
+            for col in range(self.size - self.win_sequence + 1):
+                line = [self.grid[row + i][col + i] for i in range(self.win_sequence)]
+                lines.append(line)
+
+        # Check anti-diagonals
+        for row in range(self.size - self.win_sequence + 1):
+            for col in range(self.win_sequence - 1, self.size):
+                line = [self.grid[row + i][col - i] for i in range(self.win_sequence)]
+                lines.append(line)
+
+        return lines
+
     def check_win(self, player):
         # Check rows
         for row in range(self.size):

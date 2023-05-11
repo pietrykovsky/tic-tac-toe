@@ -116,15 +116,10 @@ class Game:
         while True:
             mouse = pygame.mouse.get_pos()
 
-            self.draw_board()
-
-            if self.board.state() == const.PLAYER_1_WON:
-                self.draw_text(f"{const.PLAYER_1} WON!")
-            elif self.board.state() == const.PLAYER_2_WON:
-                self.draw_text(f"{const.PLAYER_2} WON!")
-            elif self.board.state() == const.DRAW:
-                self.draw_text("DRAW!")
-            elif self.board.turn != cfg.PLAYER:
+            if (
+                self.board.turn != cfg.PLAYER
+                and self.board.state() == const.NOT_FINISHED
+            ):
                 move = self.ai.get_move()
                 self.board.move(*move)
 
@@ -141,5 +136,14 @@ class Game:
                         const.HEIGHT // self.board.size
                     )
                     self.board.move(y, x)
+
+            self.draw_board()
+
+            if self.board.state() == const.PLAYER_1_WON:
+                self.draw_text(f"{const.PLAYER_1} WON!")
+            elif self.board.state() == const.PLAYER_2_WON:
+                self.draw_text(f"{const.PLAYER_2} WON!")
+            elif self.board.state() == const.DRAW:
+                self.draw_text("DRAW!")
 
             pygame.display.update()

@@ -1,4 +1,5 @@
 from copy import deepcopy
+from collections import Counter
 
 from board import Board
 from const import PLAYER_1, PLAYER_2, NOT_FINISHED
@@ -13,10 +14,13 @@ class MinimaxAI:
 
     def evaluate_state(self, board: Board) -> float:
         if board.check_win(self.player):
-            return 21.37
+            return float("100")
         if board.check_win(self.opponent):
-            return -21.37
-        return float(0)
+            return float("-100")
+        possible_lines = board.get_possible_lines()
+        potential_wins_1 = sum(PLAYER_2 not in line for line in possible_lines)
+        potential_wins_2 = sum(PLAYER_1 not in line for line in possible_lines)
+        return potential_wins_1 - potential_wins_2
 
     def minimax(
         self, board: Board, depth: int, alpha: float, beta: float
@@ -51,5 +55,6 @@ class MinimaxAI:
     def get_move(self):
         if len(self.board.get_legal_moves()) == self.board.size**2:
             return self.board.size // 2, self.board.size // 2
-
-        return self.minimax(self.board, self.depth, float("-inf"), float("inf"))[1]
+        e, move = self.minimax(self.board, self.depth, float("-inf"), float("inf"))
+        print(e)
+        return move
