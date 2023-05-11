@@ -1,8 +1,8 @@
 import pygame
 
-from board import Board
-from ai import MinimaxAI
-import const
+from tictactoe.board import Board
+from tictactoe.ai import MinimaxAI
+import tictactoe.const as const
 import config as cfg
 
 

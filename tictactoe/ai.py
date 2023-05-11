@@ -1,7 +1,7 @@
 from copy import deepcopy
 
-from board import Board
-from const import PLAYER_1, PLAYER_2, NOT_FINISHED
+from tictactoe.board import Board
+from tictactoe.const import PLAYER_1, PLAYER_2, NOT_FINISHED
 
 
 class MinimaxAI:

@@ -1,4 +1,4 @@
-from const import (
+from tictactoe.const import (
     EMPTY,
     PLAYER_1,
     PLAYER_2,

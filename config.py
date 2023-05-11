@@ -1,4 +1,4 @@
-from const import PLAYER_1, PLAYER_2
+from tictactoe.const import PLAYER_1, PLAYER_2
 
 # START AS A PLAYER 1 (X) OR PLAYER 2 (O)
 # PLAYER = PLAYER_1
