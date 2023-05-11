@@ -1,6 +1,9 @@
 # tic-tac-toe
 Simple Python tictactoe game with alpha beta pruning minimax AI implemented with pygame.
 
+## Preview
+![Game](preview/game.gif)
+
 ## Features
 * simple GUI in pygame
 * minimax based AI with adjusted difficulty
