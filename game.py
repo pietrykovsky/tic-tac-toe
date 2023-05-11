@@ -2,146 +2,144 @@ import pygame
 
 from board import Board
 from ai import MinimaxAI
-from const import PLAYER_1, PLAYER_2, PLAYER_1_WON, PLAYER_2_WON, DRAW, NOT_FINISHED
-
-# Initialize Pygame
-pygame.init()
-
-# Set screen dimensions and colors
-WIDTH, HEIGHT = 600, 600
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-LINE_COLOR = (50, 50, 50)
-
-# Set players
-HUMAN = PLAYER_1
-AI = PLAYER_2
-
-# Initialize the screen
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Tic Tac Toe")
-
-# Initialize the game board
-board = Board(5, 5)
-ai = MinimaxAI(board, AI, 8)
+import const
+import config as cfg
 
 
-def draw_board():
-    for row in range(1, board.size):
-        pygame.draw.line(
-            screen,
-            LINE_COLOR,
-            (0, HEIGHT // board.size * row),
-            (WIDTH, HEIGHT // board.size * row),
-            board.size,
-        )
-        pygame.draw.line(
-            screen,
-            LINE_COLOR,
-            (WIDTH // board.size * row, 0),
-            (WIDTH // board.size * row, HEIGHT),
-            board.size,
+class Game:
+    def __init__(self):
+        pygame.init()
+        pygame.font.init()
+        self.size = const.WIDTH, const.HEIGHT
+        self.screen = pygame.display.set_mode(self.size)
+        pygame.display.set_caption(const.GAME_TITLE)
+        self.board = Board(cfg.BOARD_SIZE, cfg.WIN_SEQUENCE)
+        self.ai = MinimaxAI(
+            self.board,
+            const.PLAYER_1 if cfg.PLAYER == const.PLAYER_2 else const.PLAYER_2,
+            cfg.AI_DIFFICULTY,
         )
 
-    for row in range(board.size):
-        for col in range(board.size):
-            symbol = board.grid[row][col]
-            if symbol == PLAYER_2:
-                pygame.draw.circle(
-                    screen,
-                    BLACK,
-                    (
-                        col * WIDTH // board.size + WIDTH // (2 * board.size),
-                        row * HEIGHT // board.size + HEIGHT // (2 * board.size),
-                    ),
-                    WIDTH // (2 * board.size) - 10,
-                    board.size,
-                )
-            elif symbol == PLAYER_1:
-                pygame.draw.line(
-                    screen,
-                    BLACK,
-                    (
-                        col * WIDTH // board.size
-                        + WIDTH // (2 * board.size)
-                        - WIDTH // (2 * board.size)
-                        + 10,
-                        row * HEIGHT // board.size
-                        + HEIGHT // (2 * board.size)
-                        - HEIGHT // (2 * board.size)
-                        + 10,
-                    ),
-                    (
-                        col * WIDTH // board.size
-                        + WIDTH // (2 * board.size)
-                        + WIDTH // (2 * board.size)
-                        - 10,
-                        row * HEIGHT // board.size
-                        + HEIGHT // (2 * board.size)
-                        + HEIGHT // (2 * board.size)
-                        - 10,
-                    ),
-                    board.size,
-                )
-                pygame.draw.line(
-                    screen,
-                    BLACK,
-                    (
-                        col * WIDTH // board.size
-                        + WIDTH // (2 * board.size)
-                        + WIDTH // (2 * board.size)
-                        - 10,
-                        row * HEIGHT // board.size
-                        + HEIGHT // (2 * board.size)
-                        - HEIGHT // (2 * board.size)
-                        + 10,
-                    ),
-                    (
-                        col * WIDTH // board.size
-                        + WIDTH // (2 * board.size)
-                        - WIDTH // (2 * board.size)
-                        + 10,
-                        row * HEIGHT // board.size
-                        + HEIGHT // (2 * board.size)
-                        + HEIGHT // (2 * board.size)
-                        - 10,
-                    ),
-                    board.size,
-                )
+    def draw_text(self, text: str):
+        w, h = self.size
+        font = pygame.font.SysFont("Comic Sans MS", 50, True)
+        text_surface = font.render(text, False, const.BLACK)
+        self.screen.blit(text_surface, (w // 2 - 100, h // 2 - 30))
 
+    def draw_board(self):
+        self.screen.fill(const.WHITE)
+        for row in range(1, self.board.size):
+            pygame.draw.line(
+                self.screen,
+                const.LINE_COLOR,
+                (0, const.HEIGHT // self.board.size * row),
+                (const.WIDTH, const.HEIGHT // self.board.size * row),
+                self.board.size,
+            )
+            pygame.draw.line(
+                self.screen,
+                const.LINE_COLOR,
+                (const.WIDTH // self.board.size * row, 0),
+                (const.WIDTH // self.board.size * row, const.HEIGHT),
+                self.board.size,
+            )
 
-# Main loop
-running = True
-while running:
-    screen.fill(WHITE)
+        for row in range(self.board.size):
+            for col in range(self.board.size):
+                symbol = self.board.grid[row][col]
+                if symbol == const.PLAYER_2:
+                    pygame.draw.circle(
+                        self.screen,
+                        const.RED,
+                        (
+                            col * const.WIDTH // self.board.size
+                            + const.WIDTH // (2 * self.board.size),
+                            row * const.HEIGHT // self.board.size
+                            + const.HEIGHT // (2 * self.board.size),
+                        ),
+                        const.WIDTH // (2 * self.board.size) - 10,
+                        self.board.size,
+                    )
+                if symbol == const.PLAYER_1:
+                    pygame.draw.line(
+                        self.screen,
+                        const.BLUE,
+                        (
+                            col * const.WIDTH // self.board.size
+                            + const.WIDTH // (2 * self.board.size)
+                            - const.WIDTH // (2 * self.board.size)
+                            + 10,
+                            row * const.HEIGHT // self.board.size
+                            + const.HEIGHT // (2 * self.board.size)
+                            - const.HEIGHT // (2 * self.board.size)
+                            + 10,
+                        ),
+                        (
+                            col * const.WIDTH // self.board.size
+                            + const.WIDTH // (2 * self.board.size)
+                            + const.WIDTH // (2 * self.board.size)
+                            - 10,
+                            row * const.HEIGHT // self.board.size
+                            + const.HEIGHT // (2 * self.board.size)
+                            + const.HEIGHT // (2 * self.board.size)
+                            - 10,
+                        ),
+                        self.board.size,
+                    )
+                    pygame.draw.line(
+                        self.screen,
+                        const.BLUE,
+                        (
+                            col * const.WIDTH // self.board.size
+                            + const.WIDTH // (2 * self.board.size)
+                            + const.WIDTH // (2 * self.board.size)
+                            - 10,
+                            row * const.HEIGHT // self.board.size
+                            + const.HEIGHT // (2 * self.board.size)
+                            - const.HEIGHT // (2 * self.board.size)
+                            + 10,
+                        ),
+                        (
+                            col * const.WIDTH // self.board.size
+                            + const.WIDTH // (2 * self.board.size)
+                            - const.WIDTH // (2 * self.board.size)
+                            + 10,
+                            row * const.HEIGHT // self.board.size
+                            + const.HEIGHT // (2 * self.board.size)
+                            + const.HEIGHT // (2 * self.board.size)
+                            - 10,
+                        ),
+                        self.board.size,
+                    )
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+    def main_loop(self):
+        while True:
+            mouse = pygame.mouse.get_pos()
 
-        if event.type == pygame.MOUSEBUTTONDOWN and board.turn == HUMAN:
-            x, y = pygame.mouse.get_pos()
-            row, col = y // (HEIGHT // board.size), x // (WIDTH // board.size)
-            if board.is_move_possible(row, col):
-                board.move(row, col)
+            self.draw_board()
 
-    if board.turn == AI:
-        move = ai.get_move()
-        if move is not None:
-            board.move(*move)
+            if self.board.state() == const.PLAYER_1_WON:
+                self.draw_text(f"{const.PLAYER_1} WON!")
+            elif self.board.state() == const.PLAYER_2_WON:
+                self.draw_text(f"{const.PLAYER_2} WON!")
+            elif self.board.state() == const.DRAW:
+                self.draw_text("DRAW!")
+            elif self.board.turn != cfg.PLAYER:
+                move = self.ai.get_move()
+                self.board.move(*move)
 
-    draw_board()
-    pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+                if (
+                    event.type == pygame.MOUSEBUTTONDOWN
+                    and self.board.turn == cfg.PLAYER
+                    and self.board.state() == const.NOT_FINISHED
+                ):
+                    x, y = mouse[0] // (const.WIDTH // self.board.size), mouse[1] // (
+                        const.HEIGHT // self.board.size
+                    )
+                    self.board.move(y, x)
 
-    state = board.state()
-    if state != NOT_FINISHED:
-        print(
-            "Player 1 won!"
-            if state == PLAYER_1_WON
-            else "Player 2 won!"
-            if state == PLAYER_2_WON
-            else "It's a draw!"
-        )
-        pygame.time.delay(board.size)
-        running = False
-        pygame.quit()
+            pygame.display.update()
